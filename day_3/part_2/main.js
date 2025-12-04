@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import { parentPort } from "worker_threads";
 const input = fs.readFileSync("input.txt", "utf8").trim().split("\n");
 const inputExample = [
   "987654321111111",
@@ -30,17 +29,18 @@ for (const joltageRange of input) {
   //       .map((digit) => parseInt(digit));
   //   }
 
-  while (currentArr.length > 0 && finalCombination.length < 12) {
+  while (finalCombination.length < 12) {
     const biggestDigit = Math.max(...currentArr);
-    startIndex = currentArr.indexOf(biggestDigit) + 1 + startIndex;
+    const digitIndex = currentArr.indexOf(biggestDigit);
     whitespaces -= 1;
     finalCombination += biggestDigit;
+    startIndex = startIndex + digitIndex + 1;
     currentArr = joltageRange
       .slice(startIndex, joltageRange.length - whitespaces)
       .split("")
       .map((digit) => parseInt(digit));
+    console.log(startIndex);
   }
-
   totalOutput += parseInt(finalCombination);
 }
 
