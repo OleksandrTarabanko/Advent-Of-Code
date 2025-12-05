@@ -1,5 +1,6 @@
 import * as fs from "fs";
 const rows = fs.readFileSync("input.txt", "utf8").trim().split("\n");
+
 const rowsExample = [
   "..@@.@@@@.",
   "@@@.@.@.@@",
@@ -24,42 +25,47 @@ const neighborOffsets = [
   { x: +1, y: 0 },
 ];
 
-const x = 0;
-const y = 0;
-
 function findCell(x, y) {
-  // Do i need this?    x > rowsExample[0].length && y > rowsExample.length
-  if (x < 0 && y < 0 && x > rowsExample[0].length && y > rowsExample.length) {
-    return "Your cell is out of bounds";
-  }
-  return rowsExample[x][y];
-}
-
-function overwriteSymbol(arr, x, y) {}
-
-function checkNeighbors(x, y) {
-  let currentCell = findCell(x, y);
-  console.log("currentCell: ", currentCell);
-  if (currentCell === "@") {
-    const paperNeighbors = [];
-    for (const offSet of neighborOffsets) {
-      const neighbor = findCell(x + offSet.x, y + offSet.y);
-      if (neighbor === "@") {
-        paperNeighbors.push(neighbor);
-      }
-    }
-    if (paperNeighbors.length < 4) {
-      currentCell = "X";
-      // TODO You need to go to the rowsExample array and overwrite this cell form "@" to "X"
-      console.log("currentCell: ", currentCell);
-      return;
-    } else {
-      return;
-    }
-  } else {
+  if (x < 0 || y < 0 || x >= rows[0].length || y >= rows.length) {
     return;
   }
+  return rows[y][x];
 }
 
-console.log(checkNeighbors(2, 6));
-console.log(rowsExample);
+function transformRows() {
+  const newRows = [...rows];
+  for (let y = 0; y < rows.length; y++) {
+    let newRow = rows[y];
+    for (let x = 0; x < newRow.length; x++) {
+      const currentCell = findCell(x, y);
+      if (currentCell === "@") {
+        let neighborsCount = 0;
+        for (const offset of neighborOffsets) {
+          const neighbor = findCell(x + offset.x, y + offset.y);
+          if (neighbor === "@") {
+            neighborsCount++;
+          }
+        }
+        if (neighborsCount < 4) {
+          // part before "x" + "x" + part after "x"
+          newRow = newRow.substring(0, x) + "x" + newRow.substring(x + 1);
+        }
+      }
+    }
+    newRows[y] = newRow;
+  }
+  return newRows;
+}
+
+const finalRows = transformRows();
+
+let xQuantity = 0;
+for (const row of finalRows) {
+  for (const element of row) {
+    if (element === "x") {
+      xQuantity++;
+    }
+  }
+}
+
+console.log("Total X quantity:", xQuantity);
