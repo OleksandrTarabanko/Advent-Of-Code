@@ -22,3 +22,4 @@ for (const ingredient of ingredients) {
 }
 
 console.log(freshQuantity);
+// 643
