@@ -37,7 +37,9 @@ const uniqueCount = mergedArr.reduce(
   (acc, [start, end]) => acc + (end - start + 1),
   0
 );
-// console.log(uniqueCount);
+
+console.log(uniqueCount);
+
 // 1. Sort ranges from the smallest
 // 2. Merge if possible and then finalQuantity += arr.length after loop
 // 3. if merging not possible, then just skip this arr for merging and finalQuantity += notMergibleArray.length
